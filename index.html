@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Merger - Merge PDFs Easily</title>
+    <style>
+        /* CSS Variables for Theme */
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --success: #2ecc71;
+            --success-dark: #27ae60;
+            --danger: #e74c3c;
+            --danger-dark: #c0392b;
+            --warning: #f39c12;
+            --gray-light: #ecf0f1;
+            --gray-lighter: #f8f9fa;
+            --gray-dark: #7f8c8d;
+            --dark: #2c3e50;
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            --box-shadow-hover: 0 15px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 40px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: slideInDown 0.5s ease-out;
+        }
+
+        .header h1 {
+            font-size: clamp(28px, 5vw, 42px);
+            color: var(--dark);
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: var(--gray-dark);
+            font-size: clamp(14px, 3vw, 16px);
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 3px dashed var(--primary);
+            padding: clamp(30px, 8vw, 50px);
+            text-align: center;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            background-color: var(--gray-lighter);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            animation: slideInUp 0.5s ease-out 0.1s both;
+        }
+
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+            pointer-events: none;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background-color: rgba(52, 152, 219, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.2);
+        }
+
+        .upload-area.highlight {
+            border-color: var(--success);
+            background-color: rgba(46, 204, 113, 0.08);
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(46, 204, 113, 0.2);
+        }
+
+        .upload-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            color: var(--primary);
+            stroke: currentColor;
+            animation: bounce 2s infinite;
+        }
+
+        .upload-area.highlight .upload-icon {
+            color: var(--success);
+            animation: bounce 1s infinite;
+        }
+
+        .upload-text {
+            margin: 15px 0;
+            font-size: clamp(14px, 2.5vw, 18px);
+            color: var(--gray-dark);
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: var(--transition);
+            outline: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .browse-btn {
+            background-color: var(--primary);
+            color: white;
+            margin-top: 15px;
+            animation: popIn 0.4s ease-out;
+        }
+
+        .browse-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+        }
+
+        .browse-btn:active {
+            transform: translateY(0);
+        }
+
+        /* File List Section */
+        .file-list-section {
+            margin: 30px 0;
+            animation: slideInUp 0.5s ease-out 0.2s both;
+        }
+
+        .file-list-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gray-light);
+        }
+
+        .file-list-header h2 {
+            font-size: 18px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-count {
+            background: var(--primary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .clear-all-btn {
+            background: transparent;
+            color: var(--danger);
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+
+        .clear-all-btn:hover {
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .file-list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .file-list-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .file-list-container::-webkit-scrollbar-track {
+            background: var(--gray-lighter);
+            border-radius: 10px;
+        }
+
+        .file-list-container::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .file-list-container::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* File Item */
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--gray-lighter) 0%, #ffffff 100%);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            transition: var(--transition);
+            animation: popIn 0.3s ease-out;
+        }
+
+        .file-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .file-item-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .file-index {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            font-size: 13px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .file-info {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: var(--dark);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-bottom: 4px;
+        }
+
+        .file-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            color: var(--gray-dark);
+        }
+
+        .file-size {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .move-btn {
+            background: transparent;
+            border: none;
+            color: var(--gray-dark);
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 5px;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .move-btn:hover {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--primary);
+        }
+
+        .move-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .remove-btn {
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .remove-btn:hover {
+            background-color: var(--danger-dark);
+            transform: scale(1.05);
+        }
+
+        /* Merge Button */
+        .merge-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            animation: slideInUp 0.5s ease-out 0.3s both;
+        }
+
+        .merge-btn {
+            flex: 1;
+            background-color: var(--success);
+            color: white;
+            padding: 16px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            min-height: 50px;
+        }
+
+        .merge-btn:hover:not(:disabled) {
+            background-color: var(--success-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(46, 204, 113, 0.3);
+        }
+
+        .merge-btn:disabled {
+            background-color: var(--gray-dark);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .merge-btn.merging {
+            animation: pulse 1.5s infinite;
+        }
+
+        .merge-spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        .merge-btn.merging .merge-spinner {
+            display: inline-block;
+        }
+
+        .reset-btn {
+            background-color: var(--gray-light);
+            color: var(--dark);
+            padding: 16px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .reset-btn:hover:not(:disabled) {
+            background-color: var(--gray-dark);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .reset-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Status Messages */
+        .status-box {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+            animation: slideInUp 0.4s ease-out;
+            border-left: 4px solid;
+        }
+
+        .status-box.show {
+            display: block;
+        }
+
+        .status-box.success {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: #27ae60;
+            border-left-color: var(--success);
+        }
+
+        .status-box.error {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: #c0392b;
+            border-left-color: var(--danger);
+        }
+
+        .status-box.info {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: #2980b9;
+            border-left-color: var(--primary);
+        }
+
+        .status-box.warning {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: #d68910;
+            border-left-color: var(--warning);
+        }
+
+        .status-icon {
+            margin-right: 8px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--gray-dark);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                border-radius: 10px;
+            }
+
+            .header {
+                margin-bottom: 30px;
+            }
+
+            .header h1 {
+                font-size: 28px;
+                margin-bottom: 8px;
+            }
+
+            .upload-area {
+                padding: 30px 20px;
+                margin-bottom: 25px;
+            }
+
+            .upload-icon {
+                width: 50px;
+                height: 50px;
+            }
+
+            .file-item {
+                padding: 12px;
+            }
+
+            .file-meta {
+                flex-direction: column;
+                gap: 2px;
+            }
+
+            .merge-section {
+                flex-direction: column;
+            }
+
+            .merge-btn,
+            .reset-btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .header p {
+                font-size: 14px;
+            }
+
+            .upload-area {
+                padding: 25px 15px;
+            }
+
+            .upload-icon {
+                width: 45px;
+                height: 45px;
+            }
+
+            .file-item-content {
+                gap: 8px;
+            }
+
+            .file-actions {
+                gap: 4px;
+            }
+
+            .remove-btn {
+                padding: 4px 8px;
+                font-size: 12px;
+            }
+
+            .file-list-header h2 {
+                font-size: 16px;
+            }
+        }
+
+        /* Loading Bar */
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--gray-light);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .progress-bar.show {
+            display: block;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            width: 0%;
+            animation: shimmer 2s infinite;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>📄 PDF Merger</h1>
+            <p>Combine multiple PDF files into one document seamlessly</p>
+        </div>
+        
+        <!-- Upload Area -->
+        <div class="upload-area" id="uploadArea">
+            <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <p class="upload-text"><strong>Drag & drop</strong> your PDFs here or</p>
+            <input type="file" id="fileInput" multiple accept=".pdf">
+            <button class="btn browse-btn" id="browseBtn">📁 Select PDF Files</button>
+        </div>
+
+        <!-- Status Messages -->
+        <div class="status-box" id="statusBox">
+            <span class="status-icon" id="statusIcon"></span>
+            <span id="statusMessage"></span>
+        </div>
+
+        <!-- File List Section -->
+        <div class="file-list-section" id="fileListSection" style="display: none;">
+            <div class="file-list-header">
+                <h2>
+                    <span>📋 Selected Files</span>
+                    <span class="file-count" id="fileCount">0</span>
+                </h2>
+                <button class="clear-all-btn" id="clearAllBtn">Clear All</button>
+            </div>
+            <div class="file-list-container" id="fileList"></div>
+            <div class="progress-bar" id="progressBar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+            <div class="empty-state-icon">📂</div>
+            <p>No files selected yet. Upload PDFs to get started!</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="merge-section">
+            <button class="merge-btn" id="mergeBtn" disabled>
+                <span class="merge-spinner"></span>
+                ✨ Merge PDFs
+            </button>
+            <button class="reset-btn" id="resetBtn" disabled>🔄 Reset</button>
+        </div>
+    </div>
+
+    <script>
+        class PDFMerger {
+            constructor() {
+                // DOM Elements
+                this.uploadArea = document.getElementById('uploadArea');
+                this.fileInput = document.getElementById('fileInput');
+                this.browseBtn = document.getElementById('browseBtn');
+                this.fileList = document.getElementById('fileList');
+                this.fileListSection = document.getElementById('fileListSection');
+                this.emptyState = document.getElementById('emptyState');
+                this.mergeBtn = document.getElementById('mergeBtn');
+                this.resetBtn = document.getElementById('resetBtn');
+                this.statusBox = document.getElementById('statusBox');
+                this.statusMessage = document.getElementById('statusMessage');
+                this.statusIcon = document.getElementById('statusIcon');
+                this.fileCount = document.getElementById('fileCount');
+                this.clearAllBtn = document.getElementById('clearAllBtn');
+                this.progressBar = document.getElementById('progressBar');
+                this.progressFill = document.getElementById('progressFill');
+
+                // State
+                this.files = [];
+                this.isMerging = false;
+
+                this.init();
+            }
+
+            init() {
+                this.attachEventListeners();
+            }
+
+            attachEventListeners() {
+                // Browse button
+                this.browseBtn.addEventListener('click', () => this.fileInput.click());
+
+                // File input change
+                this.fileInput.addEventListener('change', (e) => {
+                    this.handleFiles(e.target.files);
+                    this.fileInput.value = '';
+                });
+
+                // Drag and drop
+                ['dragenter', 'dragover'].forEach(event => {
+                    this.uploadArea.addEventListener(event, (e) => this.highlight(e));
+                });
+
+                ['dragleave', 'drop'].forEach(event => {
+                    this.uploadArea.addEventListener(event, (e) => this.unhighlight(e));
+                });
+
+                this.uploadArea.addEventListener('drop', (e) => {
+                    this.handleFiles(e.dataTransfer.files);
+                });
+
+                // Merge button
+                this.mergeBtn.addEventListener('click', () => this.mergePDFs());
+
+                // Reset button
+                this.resetBtn.addEventListener('click', () => this.resetAll());
+
+                // Clear all button
+                this.clearAllBtn.addEventListener('click', () => this.resetAll());
+            }
+
+            highlight(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.uploadArea.classList.add('highlight');
+            }
+
+            unhighlight(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.uploadArea.classList.remove('highlight');
+            }
+
+            handleFiles(newFiles) {
+                this.clearStatus();
+                
+                const pdfFiles = Array.from(newFiles).filter(file => 
+                    file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')
+                );
+
+                if (pdfFiles.length > 0) {
+                    this.files = [...this.files, ...pdfFiles];
+                    this.updateUI();
+                    
+                    if (pdfFiles.length < newFiles.length) {
+                        this.showStatus('warning', '⚠️', 'Some non-PDF files were ignored');
+                    }
+                } else if (newFiles.length > 0) {
+                    this.showStatus('error', '❌', 'Please select PDF files only');
+                }
+            }
+
+            updateUI() {
+                this.fileCount.textContent = this.files.length;
+                this.mergeBtn.disabled = this.files.length < 2;
+                this.resetBtn.disabled = this.files.length === 0;
+
+                if (this.files.length === 0) {
+                    this.fileListSection.style.display = 'none';
+                    this.emptyState.style.display = 'block';
+                } else {
+                    this.fileListSection.style.display = 'block';
+                    this.emptyState.style.display = 'none';
+                    this.updateFileList();
+                }
+            }
+
+            updateFileList() {
+                this.fileList.innerHTML = '';
+                
+                this.files.forEach((file, index) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    
+                    const fileContent = document.createElement('div');
+                    fileContent.className = 'file-item-content';
+                    
+                    const fileIndex = document.createElement('div');
+                    fileIndex.className = 'file-index';
+                    fileIndex.textContent = index + 1;
+                    
+                    const fileInfo = document.createElement('div');
+                    fileInfo.className = 'file-info';
+                    
+                    const fileName = document.createElement('div');
+                    fileName.className = 'file-name';
+                    fileName.textContent = file.name;
+                    fileName.title = file.name;
+                    
+                    const fileMeta = document.createElement('div');
+                    fileMeta.className = 'file-meta';
+                    fileMeta.innerHTML = `
+                        <span class="file-size">📊 ${this.formatFileSize(file.size)}</span>
+                        <span>📅 ${new Date(file.lastModified).toLocaleDateString()}</span>
+                    `;
+                    
+                    fileInfo.appendChild(fileName);
+                    fileInfo.appendChild(fileMeta);
+                    fileContent.appendChild(fileIndex);
+                    fileContent.appendChild(fileInfo);
+                    
+                    const fileActions = document.createElement('div');
+                    fileActions.className = 'file-actions';
+                    
+                    // Move up button
+                    if (index > 0) {
+                        const moveUpBtn = document.createElement('button');
+                        moveUpBtn.className = 'move-btn';
+                        moveUpBtn.textContent = '⬆️';
+                        moveUpBtn.title = 'Move up';
+                        moveUpBtn.addEventListener('click', () => this.moveFile(index, -1));
+                        fileActions.appendChild(moveUpBtn);
+                    }
+                    
+                    // Move down button
+                    if (index < this.files.length - 1) {
+                        const moveDownBtn = document.createElement('button');
+                        moveDownBtn.className = 'move-btn';
+                        moveDownBtn.textContent = '⬇️';
+                        moveDownBtn.title = 'Move down';
+                        moveDownBtn.addEventListener('click', () => this.moveFile(index, 1));
+                        fileActions.appendChild(moveDownBtn);
+                    }
+                    
+                    // Remove button
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'remove-btn';
+                    removeBtn.textContent = '🗑️ Remove';
+                    removeBtn.addEventListener('click', () => this.removeFile(index));
+                    fileActions.appendChild(removeBtn);
+                    
+                    fileContent.appendChild(fileActions);
+                    fileItem.appendChild(fileContent);
+                    this.fileList.appendChild(fileItem);
+                });
+            }
+
+            moveFile(index, direction) {
+                const newIndex = index + direction;
+                if (newIndex >= 0 && newIndex < this.files.length) {
+                    [this.files[index], this.files[newIndex]] = [this.files[newIndex], this.files[index]];
+                    this.updateFileList();
+                }
+            }
+
+            removeFile(index) {
+                this.files.splice(index, 1);
+                this.clearStatus();
+                this.updateUI();
+            }
+
+            formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            resetAll() {
+                this.files = [];
+                this.clearStatus();
+                this.updateUI();
+                this.progressBar.classList.remove('show');
+            }
+
+            showStatus(type, icon, message) {
+                this.statusBox.className = `status-box show ${type}`;
+                this.statusIcon.textContent = icon;
+                this.statusMessage.textContent = message;
+                
+                // Auto-hide status after 5 seconds for non-error messages
+                if (type !== 'error') {
+                    setTimeout(() => this.clearStatus(), 5000);
+                }
+            }
+
+            clearStatus() {
+                this.statusBox.classList.remove('show');
+            }
+
+            async mergePDFs() {
+                if (this.files.length < 2) return;
+                
+                this.isMerging = true;
+                this.mergeBtn.disabled = true;
+                this.mergeBtn.classList.add('merging');
+                this.resetBtn.disabled = true;
+                this.progressBar.classList.add('show');
+                
+                try {
+                    const formData = new FormData();
+                    this.files.forEach(file => formData.append('pdfs', file));
+                    
+                    this.showStatus('info', '⏳', 'Processing your files...');
+                    
+                    // Simulate progress
+                    let progress = 0;
+                    const progressInterval = setInterval(() => {
+                        if (progress < 90) {
+                            progress += Math.random() * 30;
+                            this.progressFill.style.width = Math.min(progress, 90) + '%';
+                        }
+                    }, 200);
+                    
+                    const response = await fetch('/merge', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    clearInterval(progressInterval);
+                    this.progressFill.style.width = '100%';
+                    
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(errorText || 'Merge failed');
+                    }
+                    
+                    const blob = await response.blob();
+                    const url = URL.createObjectURL(blob);
+                    
+                    // Create download link
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `merged_${new Date().toISOString().split('T')[0]}.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    this.showStatus('success', '✅', 'Successfully merged! Download started.');
+                    
+                    // Reset after successful merge
+                    setTimeout(() => this.resetAll(), 2000);
+                    
+                } catch (error) {
+                    this.showStatus('error', '❌', `Error: ${error.message}`);
+                    console.error('Merge error:', error);
+                } finally {
+                    this.isMerging = false;
+                    this.mergeBtn.disabled = false;
+                    this.mergeBtn.classList.remove('merging');
+                    this.resetBtn.disabled = this.files.length === 0;
+                    setTimeout(() => {
+                        this.progressBar.classList.remove('show');
+                        this.progressFill.style.width = '0%';
+                    }, 1500);
+                }
+            }
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            new PDFMerger();
+        });
+    </script>
+</body>
+</html>
